@@ -11,7 +11,8 @@
 }
 
 .question p {
-  margin-bottom: 1rem;
+  padding: 0.5rem;
+  margin-bottom: 0rem;
 }
 
 .question button {

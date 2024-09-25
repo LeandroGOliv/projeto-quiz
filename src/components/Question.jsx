@@ -1,12 +1,21 @@
 import { useContext } from "react";
 import { QuizContext } from "../context/quiz";
 
+import Options from "./Options";
+
 import styles from "./Question.module.css";
 
 function Question() {
   const [quizState, dispatch] = useContext(QuizContext);
 
   const currentQuestion = quizState.questions[quizState.currentQuestion];
+
+  const onSelectOption = (option) => {
+    dispatch({
+      type: "CHECK_ANSWER",
+      payload: { answer: currentQuestion.answer, option },
+    });
+  };
 
   return (
     <div className={styles.question}>
@@ -15,11 +24,20 @@ function Question() {
       </p>
       <h2>{currentQuestion.question}</h2>
       <div className={styles.options_container}>
-        <p>Opções</p>
+        {currentQuestion.options.map((option) => (
+          <Options
+            option={option}
+            key={option}
+            answer={currentQuestion.answer}
+            selectOption={() => onSelectOption(option)}
+          />
+        ))}
       </div>
-      <button onClick={() => dispatch({ type: "CHANGE_QUESTION" })}>
-        Continuar
-      </button>
+      {quizState.answerSelected && (
+        <button onClick={() => dispatch({ type: "CHANGE_QUESTION" })}>
+          Continuar
+        </button>
+      )}
     </div>
   );
 }

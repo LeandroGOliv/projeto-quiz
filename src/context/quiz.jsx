@@ -10,11 +10,11 @@ const initialState = {
   gameStage: STAGES[0],
   questions,
   currentQuestion: 0,
+  score: 0,
+  answerSelected: false,
 };
 
 const quizReducer = (state, action) => {
-  console.log(state, action);
-
   /* A função useReducer é uma hook do React que permite gerenciar o estado em componentes de forma semelhante ao useState, mas com mais controle, especialmente para estados complexos.
 O primeiro argumento da função useReducer é o reducer (neste caso, quizReducer), que é responsável por manipular o estado com base em diferentes ações.
 O segundo argumento é o estado inicial (initialState), que será o valor inicial do estado para o reducer. */
@@ -44,6 +44,28 @@ O segundo argumento é o estado inicial (initialState), que será o valor inicia
         ...state,
         currentQuestion: nextQuestion,
         gameStage: endGame ? STAGES[2] : state.gameStage, // se endGame é true entao chegou no fim e muda de estado, se não chegou no fim, mantem o estado
+        answerSelected: false,
+      };
+
+    case "NEW_GAME":
+      return initialState;
+
+    case "CHECK_ANSWER":
+      if (state.answerSelected) {
+        return state;
+      }
+      const answer = action.payload.answer;
+      const option = action.payload.option;
+      let correctAnswer = 0;
+
+      if (answer === option) {
+        correctAnswer = 1;
+      }
+
+      return {
+        ...state,
+        score: state.score + correctAnswer,
+        answerSelected: option,
       };
 
     default:
